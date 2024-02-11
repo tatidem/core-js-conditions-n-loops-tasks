@@ -478,39 +478,40 @@ function sortByAsc(arr) {
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
 function shuffleChar(str, iterations) {
-  let cycle;
-  let res = str;
-  for (let j = 0; j < iterations; j += 1) {
-    let strLeft = '';
-    let strRight = '';
-    for (let i = 0; i < res.length; i += 1) {
-      if (i % 2 === 0 || i === 0) {
-        strLeft += res[i];
-      } else {
-        strRight += res[i];
-      }
-    }
-    res = strLeft + strRight;
-    if (res === str) {
-      cycle = j + 1;
-      break;
-    }
-  }
-  if (cycle) {
-    for (let j = 0; j < iterations % cycle; j += 1) {
-      let strLeft = '';
-      let strRight = '';
-      for (let i = 0; i < res.length; i += 1) {
-        if (i % 2 === 0 || i === 0) {
-          strLeft += res[i];
+  function getOptLen(str1) {
+    let cycle = str1;
+    let count = 0;
+    do {
+      let even = '';
+      let odd = '';
+      for (let i = 0; i < cycle.length; i += 1) {
+        if (i % 2 === 0) {
+          even += cycle[i];
         } else {
-          strRight += res[i];
+          odd += cycle[i];
         }
       }
-      res = strLeft + strRight;
-    }
+      cycle = even + odd;
+      count += 1;
+    } while (cycle !== str);
+    return count;
   }
-  return res;
+  const optLen = getOptLen(str);
+  if (optLen === 0) return str;
+  let strRef = str;
+  for (let it = 0; it < iterations % optLen; it += 1) {
+    let even = '';
+    let odd = '';
+    for (let i = 0; i < str.length; i += 1) {
+      if (i % 2 === 0) {
+        even += strRef[i];
+      } else {
+        odd += strRef[i];
+      }
+    }
+    strRef = even + odd;
+  }
+  return strRef;
 }
 
 /**
